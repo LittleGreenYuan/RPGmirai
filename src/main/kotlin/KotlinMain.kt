@@ -24,7 +24,7 @@ object WithoutConfiguration {
     @JvmStatic
     fun main(args: Array<String>): Unit = runBlocking {
 
-        val bot = BotFactory.newBot(3028159740L, "963852741tsy") {
+        val bot = BotFactory.newBot(30L, "74") {
             fileBasedDeviceInfo() // 使用 device.json 存储设备信息
             //protocol = ANDROID_WATCH
             //protocol = ANDROID_PAD // 切换协议
