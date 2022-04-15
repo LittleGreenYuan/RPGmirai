@@ -151,12 +151,12 @@ object WithoutConfiguration {
 
 
         bot.getFriend(RootList[2].toLong())?.sendMessage("System online!")
-        //bot.getGroup(857261272)?.sendMessage("System online!")
+        //bot.getGroup(2)?.sendMessage("System online!")
         bot.eventChannel.subscribeAlways<FriendMessageEvent> {
             if (message.contentToString().startsWith("/tp")) {
                 if (sender.id == RootList[2].toLong()) {
                     var MissionText = message.contentToString().toUpperCase().replace("/TP", "")
-                    bot.getGroup(1003508545)?.sendMessage(MissionText.trim().toString())
+                    bot.getGroup(1)?.sendMessage(MissionText.trim().toString())
                 }
             } else if (message.contentToString().startsWith("/raid1")) {
                 if (sender.id == RootList[2].toLong()) {
@@ -186,7 +186,7 @@ object WithoutConfiguration {
             } else if (message.contentToString().startsWith("/gg")) {
                 if (sender.id == RootList[2].toLong()) {
                     var MissionText = message.contentToString().toUpperCase().replace("/GG", "")
-                    bot.getGroup(938548497)?.sendMessage(MissionText.trim().toString())
+                    bot.getGroup(9)?.sendMessage(MissionText.trim().toString())
                 }
             }
         }
@@ -611,7 +611,7 @@ object WithoutConfiguration {
                                                                     ImageIO.write(image, "png", os)
                                                                     ImageIO.write(image, "png", File("I:\\Jetbrains\\mirai-hello-world\\src\\main\\kotlin\\xsx.png"))
                                                                     subject.sendImage( ByteArrayInputStream(os.toByteArray()) as InputStream)
-                                                                    subject.sendMessage(PlainText("哈哈，笨比不出图吧！"))
+                                                                    subject.sendMessage(PlainText("哈哈，不出图吧！"))
 
                                                                     //subject.sendMessage(net.mamoe.mirai.message.data.Audio())
                                                                     //subject.sendMessage(ByteArrayInputStream(os.toByteArray()) as InputStream)
