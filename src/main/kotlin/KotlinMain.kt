@@ -14,7 +14,6 @@ import net.mamoe.mirai.message.data.MessageSource.Key.quote
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.content
 import net.mamoe.mirai.utils.BotConfiguration.MiraiProtocol.*
-import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -34,10 +33,9 @@ import javax.sound.sampled.AudioInputStream
 object WithoutConfiguration {
     @JvmStatic
     fun main(args: Array<String>): Unit = runBlocking {
-        val WorkPath = "I:\\Jetbrains\\mirai-hello-world\\src\\main\\kotlin\\"
         //定义一个用于存放配置数据的list，包含了bot账号，密码以及root权限的各类数据
         val RootList = mutableListOf<String>()
-        val RootPath= WorkPath+"data\\root.txt"
+        val RootPath= "I:\\Jetbrains\\mirai-hello-world\\src\\main\\kotlin\\data\\root.txt"
         val RootDATA = File(RootPath).readLines()
         RootList.add(RootDATA[1])//存放bot账号
         RootList.add(RootDATA[3])//存放bot密码
@@ -52,18 +50,18 @@ object WithoutConfiguration {
             protocol = ANDROID_PHONE
         }.alsoLogin()
 
-        val detime = 1//执行备份任务的时间，H
+        val detime = 2//执行备份任务的时间，DAY
         val HelpWord= listOf("/help: 进行操作指南查询。\n/RPG：前往冒险者酒馆进行文字RPG冒险活动。\n/explore：开展探索活动获得随机奖励。\n/operation：开展随机副本探索，挑战随机怪物获得奖励。" +
             "\n/spring：花费20金币进行生命恢复。\n/mission：查看冒险者任务公告。\n/submit：提交相应冒险者任务。\n/raid：查询大型副本状态。\n/raidattack：一定时间内，对RaidBoss发起一次进攻。")
 
-        val UserKeyListPath = WorkPath+"UserKey.txt"
-        val LogUserKeyListPath = WorkPath
+        val UserKeyListPath = "I:\\Jetbrains\\mirai-hello-world\\src\\main\\kotlin\\UserKey.txt"
+        val LogUserKeyListPath = "I:\\Jetbrains\\mirai-hello-world\\src\\main\\kotlin\\"
         //按行读取TXT中的文本内容，每一行是一个LIST
         val UserDATA = File(UserKeyListPath).readLines()
         val Datamap:HashMap<Long,List<Any>> = HashMap<Long,List<Any>>() //define empty hashmap
-        val GoodsItem = listOf( "生命药剂", "骸骨碎片", "青苔木片", "特供岩石", "蝙蝠肉块", "多彩凝胶", "粘连纤维", "远古种子","剧毒蛾粉")
+        val GoodsItem = listOf( "生命药剂", "骸骨碎片", "青苔木片", "特供岩石", "蝙蝠肉块", "多彩凝胶", "粘连纤维", "远古种子")
         //val GoodsItem = listOf( "LifePotion", "Bonefragments", "Woods", "Stones", "MeatPieces", "Gels", "Herbals", "Seeds")
-        val MonstersItem = listOf( "炼金商人", "骷髅哨兵", "古老树种", "岩石棘虫", "吸血蝙蝠", "彩虹史莱姆", "走路草", "狂暴松鼠","闪光飞蛾")
+        val MonstersItem = listOf( "炼金商人", "骷髅哨兵", "古老树种", "岩石棘虫", "吸血蝙蝠", "彩虹史莱姆", "走路草", "狂暴松鼠")
 
         //任务面板需求材料，创建对应材料的list里面存储了相应需要提交的材料数量
         val MissionA = mapOf<Int, Int>(0 to 5, 2 to 3, 4 to 5)
@@ -80,8 +78,8 @@ object WithoutConfiguration {
             ,"上上","中下","下下","中上","中上","中上","下下","中上","中上","中下","下下","下下","下下","中上","下下","上上","上上","上","中上","上上","中上","上上","上上","中下","中上","中下","上上","下下"
             , "上上","下下","中上","上上","下下","上上","下下","中上","中上","中下")
         val JieofGua=listOf("困龙得水好运交，不由喜气上眉梢，一切谋望皆如意，向后时运渐渐高。","肥羊失群入山岗，饿虎逢之把口张，适口充肠心欢喜，卦若占之大吉昌。","风刮乱丝不见头，颠三倒四犯忧愁，慢从款来左顺遂，急促反惹不自由。","卦中爻象犯小耗，君子占之运不高，婚姻合伙有琐碎，做事必然受苦劳。","明珠土埋日久深，无光无亮到如今，忽然大风吹土去，自然显露有重新。","心中有事事难做，恰是二人争路走，雨下俱是要占先，谁肯让谁走一步。","将帅领旨去出征，骑着烈马拉硬弓，百步穿杨去得准，箭中金钱喜气生。","顺风行船撒起帆，上天又助一蓬风，不用费力逍遥去，任意而行大亨通。","苗逢旱天尽焦梢，水想云浓雨不浇，农人仰面长吁气，是从款来莫心高。","凤凰落在西岐山，长鸣几声出圣贤，天降文王开基业，富贵荣华八百年。","学文满腹入场闱，三元及第得意回，从今解去愁和闷，喜庆平地一声雷。","虎落陷坑不堪言，进前容易退后难，谋望不遂自己便，疾病口舌事牵连。","心中有事犯猜疑，谋望从前不着实，幸遇明人来指引，诸般忧闷自消之。","砍树摸雀作事牢，是非口舌自然消，婚姻合伙不费力，若问走失未逃脱。","天赐贫人一封金，不争不抢两平分，彼此分得金到手，一切谋望皆遂心。","太公插下杏黄旗，收妖为徒归西岐，自此青龙得了位，一旦谋望百事宜。","泥里步踏这几年，推车靠崖在眼前，目下就该再使力，扒上崖去发财源。","卦中爻象如推磨，顺当为福反为祸，心中有益且迟迟，凡事尽从忙处错。","君王无道民倒悬，常想拨云见青天，幸逢明主施仁政，重又安居乐自然。","卦遇蓬花旱逢河，生意买卖利息多，婚姻自有人来助，出门永不受折磨。","运拙如同身受饥，幸得送饭又送食，适口充腹心欢喜，忧愁从此渐消移。","钟鼓乐之大吉庆，占者逢之喜临头。","鹊遇天晚宿林中，不知林内先有鹰，虽然同处心生恶，卦若逢之是非轻。","马氏太公不相合，世人占之忧疑多，恩人无义反为怨，是非平地起风波。","飞鸟失机落笼中，纵然奋飞不能腾，目下只宜守本分，妄想扒高万不能。","忧愁常锁两眉头，千头万绪挂心间，从今以后防开阵，任意行而不相干。","太公独钓渭水河，手执丝杆忧愁多，时来又遇文王访，自此永不受折磨。","夜晚梦里梦金银，醒来仍不见一文，目下只宜求本分，思想络是空劳神。","一轮明月照水中，只见影儿不见踪，愚夫当财下去取，摸来摸去一场空。","官人来占主高升，庄农人家产业增，生意买卖利息厚，匠艺占之大亨通。","运去黄金失色，时来棒槌发芽，月令极好无差，且喜心宽意大。","渔翁寻鱼运气好，鱼来撞网跑不了，别人使本挣不来，谁想一到就凑合。","浓云蔽日不光明，劝君且莫出远行，婚姻求财皆不利，提防口舌到门庭。","卦占工师得大木，眼前该着走上路，时来运转多顺当，有事自管放心宽。","锄地锄去苗里草，谁想财帛将人找，一锄锄出银子来，这个运气也算好。","时乖运拙走不着，急忙过河拆了桥，恩人无义反为怨，凡事无功枉受劳。","一朵鲜花镜中开，看着极好取不来，劝君休把镜花恋，卦若逢之主可怪。","此卦占来运气歹，如同太公作买卖，贩猪牛快贩羊迟，猪羊齐贩断了宰。","大雨倾地雪满天，路上行人苦又寒，拖泥带水费尽力，事不遂心且耐烦。","目下月令如过关，千辛万苦受熬煎，时来恰相有人救，任意所为不相干。","时运不至费心多，比作推车受折磨，山路崎岖吊下耳，左插右按按不着。","时来运转吉气发，多年枯木又开花，枝叶重生多茂盛，几人见了几人夸。","蜘蛛脱网赛天军，粘住游蜂翅翎毛，幸有大风吹破网，脱离灾难又逍遥。","他乡遇友喜气欢，须知运气福重添，自今交了顺当运，向后管保不相干。","游鱼戏水被网惊，跳过龙门身化龙，三尺杨柳垂金线，万朵桃花显你能。","士人来占必得名，生意买卖也兴隆，匠艺逢之交易好，农间庄稼亦收成。","时运不来好伤怀，撮上押去把梯抬，一筒虫翼无到手，转了上去下不来。","枯井破费已多年，一朝流泉出来鲜，资生济渴人称羡，时来运转喜自然。","苗逢旱天渐渐衰，幸得天恩降雨来，忧去喜来能变化，求谋干事遂心怀。","莺鹜蛤蜊落沙滩，蛤蜊莺鹜两翅扇，渔人进前双得利，失走行人却自在。","一口金钟在淤泥，人人拿着当玩石，忽然一日钟悬起，响亮一声天下知。","财帛常打心头走，可惜眼前难到手，不如意时且忍耐，逢着闲事休开口。","俊鸟幸得出笼中，脱离灾难显威风，一朝得意福力至，东西南北任意行。","求鱼须当向水中，树上求之不顺情，受尽爬揭难随意，劳而无功运平平。","古镜昏暗好几年，一朝磨明似月圆，君子谋事逢此卦，时来运转喜自然。","飞鸟树上垒窝巢，小人使计举火烧，君占此卦为不吉，一切谋望枉徒劳。","一叶孤舟落沙滩，有篙无水进退难，时逢大雨江湖溢，不用费力任往返。","这个卦象真可取，觉着做事不费力，休要错过这机关，事事觉得随心意。","隔河望见一锭金，欲取岸宽水又深，指望资财难到手，昼思夜想枉费心。","时来运转喜气生，登台封神姜太公，到此诸神皆退位，纵然有祸不成凶。","路上行人色匆匆，急忙无桥过薄冰，小心谨慎过得去，一步错了落水中。","行人路过独木桥，心内惶恐眼里瞧，爽利保你过得去，慢行一定不安牢。","金榜以上题姓名，不负当年苦用功，人逢此卦名吉庆，一切谋望大亨通。","离地着人几丈深，是防偷营劫寨人，后封太岁为凶煞，时加谨慎祸不侵。")
-        val Mapimg = ImageIO.read(File(WorkPath+"data\\IMG01AT.png")).getScaledInstance(400, 400, ImageShaper.SCALE_SMOOTH)
-        val flagimg = ImageIO.read(File(WorkPath+"data\\flag.png")).getScaledInstance(30, 30, ImageShaper.SCALE_SMOOTH)
+        val Mapimg = ImageIO.read(File("I:\\Jetbrains\\mirai-hello-world\\src\\main\\kotlin\\data\\IMG01AT.png")).getScaledInstance(400, 400, ImageShaper.SCALE_SMOOTH)
+        val flagimg = ImageIO.read(File("I:\\Jetbrains\\mirai-hello-world\\src\\main\\kotlin\\data\\flag.png")).getScaledInstance(30, 30, ImageShaper.SCALE_SMOOTH)
         val layerMap = mapOf("M" to Mapimg, "F" to flagimg)
 
 
@@ -153,13 +151,12 @@ object WithoutConfiguration {
 
 
         bot.getFriend(RootList[2].toLong())?.sendMessage("System online!")
+        //bot.getGroup(857261272)?.sendMessage("System online!")
         bot.eventChannel.subscribeAlways<FriendMessageEvent> {
-            if (message.contentToString().startsWith("/mtp")) {
+            if (message.contentToString().startsWith("/tp")) {
                 if (sender.id == RootList[2].toLong()) {
-                    var MissionText = message.contentToString().toUpperCase().replace("/MTP", "")
-                    val Messagelist: List<String> = MissionText.trim().split("\\s+".toRegex())
-                    //println(Messagelist)
-                    bot.getGroup(Messagelist[0].toLong())?.sendMessage(Messagelist[1].trim().toString())
+                    var MissionText = message.contentToString().toUpperCase().replace("/TP", "")
+                    bot.getGroup(1003508545)?.sendMessage(MissionText.trim().toString())
                 }
             } else if (message.contentToString().startsWith("/raid1")) {
                 if (sender.id == RootList[2].toLong()) {
@@ -185,6 +182,11 @@ object WithoutConfiguration {
                     RaidSubmit(raidListID = RaidListID, goods = RaidBoss.Goods, datamap = Datamap)
                     RaidBoss.EndRaid()
                     subject.sendMessage("强制结算RaidBoss。")
+                }
+            } else if (message.contentToString().startsWith("/gg")) {
+                if (sender.id == RootList[2].toLong()) {
+                    var MissionText = message.contentToString().toUpperCase().replace("/GG", "")
+                    bot.getGroup(938548497)?.sendMessage(MissionText.trim().toString())
                 }
             }
         }
@@ -607,76 +609,16 @@ object WithoutConfiguration {
                                                                     g2d.dispose()
                                                                     val os = ByteArrayOutputStream()
                                                                     ImageIO.write(image, "png", os)
-
-                                                                    //ImageIO.write(image, "png", File(WorkPath+"xsx.png"))
+                                                                    ImageIO.write(image, "png", File("I:\\Jetbrains\\mirai-hello-world\\src\\main\\kotlin\\xsx.png"))
                                                                     subject.sendImage( ByteArrayInputStream(os.toByteArray()) as InputStream)
-                                                                    //subject.sendMessage(PlainText("哈哈，不出图吧！"))
+                                                                    subject.sendMessage(PlainText("哈哈，笨比不出图吧！"))
 
                                                                     //subject.sendMessage(net.mamoe.mirai.message.data.Audio())
                                                                     //subject.sendMessage(ByteArrayInputStream(os.toByteArray()) as InputStream)
-                                                                }else
-                                                                    if(message.contentToString().startsWith("/r6")){
-                                                                        val MapPath=WorkPath+"data\\R6Maps\\"
-                                                                        val R6map = mapOf<String, String>("银行" to "bank", "边境" to "border","木屋" to "chalet","林中小屋" to "chalet","俱乐部" to "clubhouse","海岸线" to "coastline","贫民窟" to "favela"
-                                                                            ,"领事馆" to "consulate","堡垒" to "fortress","要塞" to "fortress","赫里福" to "hereford","基地" to "hereford","豪宅" to "house","芝加哥" to "house","咖啡" to "kafe","咖啡馆" to "kafe"
-                                                                            ,"运河" to "kanal","俄勒冈" to "oregon","屋宅" to "oregon","内陆" to "outback","服务站" to "outback","荒漠" to "outback"
-                                                                            ,"摩天大楼" to "skyscraper","主题乐园" to "themepark","庄园" to "villa")
-                                                                        val R6more = mapOf<String,String>("地下" to "Basement","地面" to "Ground","一楼" to "1F","1楼" to "1F","二楼" to "2F","2楼" to "2F","三楼" to "3F","3楼" to "3F","楼顶" to "Roof","屋顶" to "Roof")
-                                                                        val R6remore = mapOf<String,String>("Basement.jpg" to "地下","Ground.jpg" to "地面","1F.jpg" to "一楼","2F.jpg" to "二楼","3F.jpg" to "三楼","Roof.jpg" to "楼顶")
-
-
-                                                                        var MissionText = message.contentToString()
-                                                                        var Messagelist: List<String> = MissionText.trim().split("\\s+".toRegex())
-                                                                        if(Messagelist.count()==1)
-                                                                        {
-                                                                            subject.sendMessage("请输入想要查询的地图与具体图层，中间用空格隔开。")
-                                                                        }else if(Messagelist.count()==2){
-                                                                            if(R6map.containsKey(Messagelist[1])){
-                                                                                var R6MapPath = MapPath+"r6-maps-"+R6map[Messagelist[1]]+"\\"
-
-                                                                                val dir = File( R6MapPath).listFiles()
-                                                                                var outputstring="${Messagelist[1]}有楼层："
-                                                                                for(i in dir.indices){
-                                                                                    if(dir[i].isFile){
-                                                                                        outputstring=outputstring+"  "+R6remore[dir[i].name.toString()]
-                                                                                    }
-                                                                                }
-                                                                                subject.sendMessage(outputstring)
-
-                                                                            }else{
-                                                                                subject.sendMessage("该地图似乎不存在，请查阅后再进行查询。")
-                                                                            }
-
-                                                                        }else if(Messagelist.count()==3){
-                                                                            if(R6more.containsKey(Messagelist[2])){
-                                                                                var R6MapPath = MapPath+"r6-maps-"+R6map[Messagelist[1]]+"\\"
-                                                                                val dir = File(R6MapPath).listFiles()
-
-                                                                                val fileName = R6more[Messagelist[2]]+".jpg"
-                                                                                var file = File(R6MapPath, fileName)
-                                                                                var fileExists = file.exists()
-                                                                                if(fileExists){
-                                                                                    val filex = File(R6MapPath+fileName).toExternalResource()
-                                                                                    val ExternalResource=subject.uploadImage(filex)
-                                                                                    subject.sendMessage(ExternalResource)
-
-                                                                                }else{
-                                                                                    subject.sendMessage("该地图似乎不存在，请查阅后再进行查询。")
-                                                                                }
-                                                                            }
-
-                                                                        }
-
-
-
-                                                                    }
+                                                                }
             //SaveHashMap(LogUserKeyListPath,Datamap)
 
         }
-        /*
-        bot.eventChannel.subscribeAlways<> {
-
-        }*/
 
 
 
@@ -866,3 +808,25 @@ public class RaidMoster constructor(Namei: String,HPi: Int,Attacki: Int, Goodsi:
 
 
 }
+/*
+object WithConfiguration {
+    @JvmStatic
+    fun main(args: Array<String>): Unit = runBlocking {
+        // 使用自定义配置
+        val bot = BotFactory.newBot(315L, "74") {
+            fileBasedDeviceInfo() // 使用 device.json 存储设备信息
+            protocol = ANDROID_PAD // 切换协议
+            //protocol = ANDROID_PHONE
+        }.alsoLogin()
+        println("WithConfiguration下方的程序被运行了。")
+
+        /*bot.getFriend(3028159740)?.sendMessage("Hello, World!")
+        bot.eventChannel.subscribeAlways<FriendMessageEvent> {
+            if (sender.id == 3028159740L) {
+                subject.sendMessage(message.quote() + "Hi, you just said '${message.content}'")
+            }
+        }*/
+
+
+    }
+}*/
