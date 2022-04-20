@@ -14,6 +14,7 @@ import net.mamoe.mirai.message.data.MessageSource.Key.quote
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.content
 import net.mamoe.mirai.utils.BotConfiguration.MiraiProtocol.*
+import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -60,9 +61,9 @@ object WithoutConfiguration {
         //按行读取TXT中的文本内容，每一行是一个LIST
         val UserDATA = File(UserKeyListPath).readLines()
         val Datamap:HashMap<Long,List<Any>> = HashMap<Long,List<Any>>() //define empty hashmap
-        val GoodsItem = listOf( "生命药剂", "骸骨碎片", "青苔木片", "特供岩石", "蝙蝠肉块", "多彩凝胶", "粘连纤维", "远古种子")
+        val GoodsItem = listOf( "生命药剂", "骸骨碎片", "青苔木片", "特供岩石", "蝙蝠肉块", "多彩凝胶", "粘连纤维", "远古种子","剧毒蛾粉")
         //val GoodsItem = listOf( "LifePotion", "Bonefragments", "Woods", "Stones", "MeatPieces", "Gels", "Herbals", "Seeds")
-        val MonstersItem = listOf( "炼金商人", "骷髅哨兵", "古老树种", "岩石棘虫", "吸血蝙蝠", "彩虹史莱姆", "走路草", "狂暴松鼠")
+        val MonstersItem = listOf( "炼金商人", "骷髅哨兵", "古老树种", "岩石棘虫", "吸血蝙蝠", "彩虹史莱姆", "走路草", "狂暴松鼠","闪光飞蛾")
 
         //任务面板需求材料，创建对应材料的list里面存储了相应需要提交的材料数量
         val MissionA = mapOf<Int, Int>(0 to 5, 2 to 3, 4 to 5)
@@ -606,16 +607,76 @@ object WithoutConfiguration {
                                                                     g2d.dispose()
                                                                     val os = ByteArrayOutputStream()
                                                                     ImageIO.write(image, "png", os)
-                                                                    ImageIO.write(image, "png", File(WorkPath+"xsx.png"))
+
+                                                                    //ImageIO.write(image, "png", File(WorkPath+"xsx.png"))
                                                                     subject.sendImage( ByteArrayInputStream(os.toByteArray()) as InputStream)
-                                                                    subject.sendMessage(PlainText("哈哈，不出图吧！"))
+                                                                    //subject.sendMessage(PlainText("哈哈，不出图吧！"))
 
                                                                     //subject.sendMessage(net.mamoe.mirai.message.data.Audio())
                                                                     //subject.sendMessage(ByteArrayInputStream(os.toByteArray()) as InputStream)
-                                                                }
+                                                                }else
+                                                                    if(message.contentToString().startsWith("/r6")){
+                                                                        val MapPath=WorkPath+"data\\R6Maps\\"
+                                                                        val R6map = mapOf<String, String>("银行" to "bank", "边境" to "border","木屋" to "chalet","林中小屋" to "chalet","俱乐部" to "clubhouse","海岸线" to "coastline","贫民窟" to "favela"
+                                                                            ,"领事馆" to "consulate","堡垒" to "fortress","要塞" to "fortress","赫里福" to "hereford","基地" to "hereford","豪宅" to "house","芝加哥" to "house","咖啡" to "kafe","咖啡馆" to "kafe"
+                                                                            ,"运河" to "kanal","俄勒冈" to "oregon","屋宅" to "oregon","内陆" to "outback","服务站" to "outback","荒漠" to "outback"
+                                                                            ,"摩天大楼" to "skyscraper","主题乐园" to "themepark","庄园" to "villa")
+                                                                        val R6more = mapOf<String,String>("地下" to "Basement","地面" to "Ground","一楼" to "1F","1楼" to "1F","二楼" to "2F","2楼" to "2F","三楼" to "3F","3楼" to "3F","楼顶" to "Roof","屋顶" to "Roof")
+                                                                        val R6remore = mapOf<String,String>("Basement.jpg" to "地下","Ground.jpg" to "地面","1F.jpg" to "一楼","2F.jpg" to "二楼","3F.jpg" to "三楼","Roof.jpg" to "楼顶")
+
+
+                                                                        var MissionText = message.contentToString()
+                                                                        var Messagelist: List<String> = MissionText.trim().split("\\s+".toRegex())
+                                                                        if(Messagelist.count()==1)
+                                                                        {
+                                                                            subject.sendMessage("请输入想要查询的地图与具体图层，中间用空格隔开。")
+                                                                        }else if(Messagelist.count()==2){
+                                                                            if(R6map.containsKey(Messagelist[1])){
+                                                                                var R6MapPath = MapPath+"r6-maps-"+R6map[Messagelist[1]]+"\\"
+
+                                                                                val dir = File( R6MapPath).listFiles()
+                                                                                var outputstring="${Messagelist[1]}有楼层："
+                                                                                for(i in dir.indices){
+                                                                                    if(dir[i].isFile){
+                                                                                        outputstring=outputstring+"  "+R6remore[dir[i].name.toString()]
+                                                                                    }
+                                                                                }
+                                                                                subject.sendMessage(outputstring)
+
+                                                                            }else{
+                                                                                subject.sendMessage("该地图似乎不存在，请查阅后再进行查询。")
+                                                                            }
+
+                                                                        }else if(Messagelist.count()==3){
+                                                                            if(R6more.containsKey(Messagelist[2])){
+                                                                                var R6MapPath = MapPath+"r6-maps-"+R6map[Messagelist[1]]+"\\"
+                                                                                val dir = File(R6MapPath).listFiles()
+
+                                                                                val fileName = R6more[Messagelist[2]]+".jpg"
+                                                                                var file = File(R6MapPath, fileName)
+                                                                                var fileExists = file.exists()
+                                                                                if(fileExists){
+                                                                                    val filex = File(R6MapPath+fileName).toExternalResource()
+                                                                                    val ExternalResource=subject.uploadImage(filex)
+                                                                                    subject.sendMessage(ExternalResource)
+
+                                                                                }else{
+                                                                                    subject.sendMessage("该地图似乎不存在，请查阅后再进行查询。")
+                                                                                }
+                                                                            }
+
+                                                                        }
+
+
+
+                                                                    }
             //SaveHashMap(LogUserKeyListPath,Datamap)
 
         }
+        /*
+        bot.eventChannel.subscribeAlways<> {
+
+        }*/
 
 
 
