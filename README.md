@@ -1,4 +1,4 @@
-# RPFmirai
+# RPmirai
 
 RPGMirai based on Mirai Hello World example.
 
