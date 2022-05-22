@@ -36,7 +36,7 @@ object WithoutConfiguration {
         val WorkPath = "C:\\BotDATA\\mirai-hello-world\\src\\main\\kotlin\\"
         //定义一个用于存放配置数据的list，包含了bot账号，密码以及root权限的各类数据
         val RootList = mutableListOf<String>()
-        val RootPath= WorkPath+"data\\root.txt"
+        val RootPath= WorkPath+"data\\loroot.txt"
         val RootDATA = File(RootPath).readLines()
         RootList.add(RootDATA[1])//存放bot账号
         RootList.add(RootDATA[3])//存放bot密码
