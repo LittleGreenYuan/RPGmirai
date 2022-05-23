@@ -58,12 +58,13 @@ class RPGData {
             //每一次加载数据（相当于重启Bot）后添加一个自动保存线程
             val executor = Executors.newScheduledThreadPool(1)//创建一个协程
             executor.scheduleAtFixedRate(Runnable{
-                println("已经设置了自动保存！")
+                //println("已经设置了自动保存！")
                 runBlocking {
                     val current = LocalDateTime.now()
                     val formatter = DateTimeFormatter.BASIC_ISO_DATE
                     val formatted = current.format(formatter)
 
+                    //val fileName = LogUserKeyListPath + "UserKey.txt"
                     val fileName = LogUserKeyListPath + "UserKey.txt"
                     println(fileName)
                     val filename = File(fileName)

@@ -14,18 +14,14 @@ package org.example.mirai.Server
 
 class Commandparising {
     companion object MyObject{
-        const val subName = "bb"
-        val testname: String
-            get()="ABC"
-
         val classConstructors = listOf<() -> Any>(
-            ::getName,
+            ::getCommandName,
             ::gettest,
             ::ClassC,
             ::execute
         )
-        fun getName(): String {
-            return "小红"
+        fun getCommandName(): String {
+            return "/ABC"
         }
         fun gettest(): String {
             return "AA"

@@ -4,6 +4,7 @@ import net.mamoe.mirai.Bot
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.utils.BotConfiguration
+import org.example.mirai.DataServer.RPGData
 import java.io.File
 
 
@@ -26,8 +27,7 @@ class UserData {
                 protocol = BotConfiguration.MiraiProtocol.ANDROID_PHONE
             }.alsoLogin()
             bot.getFriend(RootList[2].toLong())?.sendMessage("System online!")//加载bot
-
-
+            RPGData.RPGUserDataUpload()//上传本地RPG的相关数据，同时设定自动保存的协程
             return bot
         }
 

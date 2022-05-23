@@ -1,6 +1,10 @@
 package org.example.mirai.CommandServer
 
 import java.io.File
+import java.util.HashMap
+import kotlin.reflect.full.companionObject
+import kotlin.reflect.full.companionObjectInstance
+import kotlin.reflect.full.declaredFunctions
 
 object CommandManager {
     fun autoSetup(packageName: String): MutableList<String> {
@@ -26,6 +30,36 @@ object CommandManager {
             }
             return ktclassName
         }
+    }
+    fun autoSetupCommand(serverName: MutableList<String>): HashMap<String,Int> {
+        //从每一个server中提取指令，所有指令都将被转换成大写
+        val kcalssMap : HashMap<String, Int> = HashMap<String,Int>() //define empty hashmap
+        for (i in 0..serverName.size-1){
+            var setupCommandName = serverName[i].toString()
+            val personClass = Class.forName(setupCommandName).kotlin
+            //val obj = personClass.createInstance()
+            val companionObj = personClass.companionObjectInstance
+            // 访问companion object的函数
+            personClass.companionObject?.declaredFunctions?.forEach {
+                when (it.name) {
+                    "getCommandName" -> {
+                        println("已经从${setupCommandName}注册指令：->"+it.call(companionObj).toString())//打印注册的指令名称
+                        kcalssMap.put(it.call(companionObj).toString().toUpperCase(),i)
+                    }
+                }
+            }
+        }
+        return kcalssMap
+    }
+    fun CommandExtraction(messagestring: String): MutableList<String> {
+        //list将按照空格解析message，倒数第一个存放解析到的指令，倒数第二个保存了原始message
+        var messagelist = messagestring.toUpperCase().trim().split("\\s+".toRegex()) as MutableList<String>
+        var commandString = messagelist[0].replace("\\d".toRegex(), "")
+        val myregex= "^\\/.*[A-Z]".toRegex()
+        val command = myregex.find(commandString)?.value
+        messagelist.add(messagestring)
+        messagelist.add(command.toString())
+        return messagelist
     }
 
 
