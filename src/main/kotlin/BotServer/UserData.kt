@@ -14,8 +14,8 @@ class UserData {
     companion object{
         val RootList = mutableListOf<String>()
         val RootPath = System.getProperty("user.dir")+"\\src\\main\\kotlin\\data\\loroot.txt"//定义根信息存储的位置
-        val RootDATA = File(RootPath)?.readLines()
         suspend fun Botload(): Bot {
+            val RootDATA = File(RootPath)?.readLines()
             RootList.add(RootDATA[1])//存放bot账号
             RootList.add(RootDATA[3])//存放bot密码
             RootList.add(RootDATA[5])//存放root账号

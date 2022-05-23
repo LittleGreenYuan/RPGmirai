@@ -1,5 +1,7 @@
 package org.example.mirai.Server
 
+import org.example.mirai.BotServer.UserUtil
+
 /*
 //main函数中调用
 //废弃的指令解析测试代码，通过类里的classConstructors实现调用，但使用map对myclass赋值将无法执行
@@ -30,30 +32,10 @@ class Commandparising {
             return "$(c+a).toString()"
         }
         fun execute(): String {
-            var inputdata=UserUtil.readData()
-            return "${inputdata}(c+a).toString()"
+            //var inputdata= UserUtil.readData()
+            //return "${inputdata}(c+a).toString()"
+            return "tt"
         }
     }
 
-}
-class UserUtil {
-    val subName = "bb"
-    object readData {
-        var tempdata=-1
-        val classConstructors = listOf<() -> Any>(
-            ::getdatax
-        )
-        fun getdatax(): String {
-            return tempdata.toString()
-        }
-
-        fun getdata(input: Int){
-            tempdata=input
-        }
-        operator fun invoke(): Any? {
-            return tempdata
-        }
-
-
-    }
 }

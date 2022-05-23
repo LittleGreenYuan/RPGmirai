@@ -1,11 +1,16 @@
 package org.example.mirai
 
 import kotlinx.coroutines.runBlocking
+import net.mamoe.mirai.contact.getMember
+import net.mamoe.mirai.event.events.FriendMessageEvent
+import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.message.data.sendTo
 import net.mamoe.mirai.utils.BotConfiguration.MiraiProtocol.*
 import org.example.mirai.BotServer.UserData
+import org.example.mirai.BotServer.UserUtil
 import org.example.mirai.CommandServer.CommandManager
+import org.example.mirai.CommandServer.CommandManager.CommandExtraction
 import org.example.mirai.DataServer.RPGData
-import org.example.mirai.Server.UserUtil
 import java.io.File
 import java.util.*
 import java.util.regex.Pattern
@@ -27,18 +32,51 @@ object WithoutConfigurationTest {
     fun main(args: Array<String>): Unit = runBlocking {
 
 
-        //val bot = UserData.Botload()//回传生成的的bot，同时内置了上传本地玩家数据的RPGData.RPGUserDataUpload()部分
+        val bot = UserData.Botload()//回传生成的的bot，同时内置了上传本地玩家数据的RPGData.RPGUserDataUpload()部分
         //RPGData.RPGUserDataUpload()//上传本地RPG的相关数据，同时设定自动保存的协程
 
         val serverName = CommandManager.autoSetup(System.getProperty("user.dir")+"\\src\\main\\kotlin\\Server")//将定义了插件的包导入成为包名返回
         val serverMap = CommandManager.autoSetupCommand(serverName)//将所有插件的调用指令与serverName建立map映射
-        //println(serverMap.get("/BC")?.let { serverName.get(it.toInt()) })//安全地访问每个指令对应的包，如果没有注册该指令则返回null
+
+        bot.eventChannel.subscribeAlways<GroupMessageEvent> {
+            val Command = CommandExtraction(message.contentToString())
+            if(Command[Command.size-1] == "null"){
+
+            }else{
+                UserUtil.readData.getBotdata(message, sender, senderName)
+                var kclasstname = serverMap.get(Command[Command.size-1])?.let { serverName.get(it.toInt()) }//安全地访问每个指令对应的包，如果没有注册该指令则返回null
+                if(kclasstname == null){
+                    kclasstname="org.example.mirai.Server.FailedServer"
+                }
+                val inputcommand="ServerMain"//解析具体执行什么指令
+                val personClass = Class.forName(kclasstname.toString()).kotlin
+                //val obj = personClass.createInstance()
+                val companionObj = personClass.companionObjectInstance
+                // 访问companion object的函数
+                personClass.companionObject?.declaredFunctions?.forEach {
+                    when (it.name) {
+                        inputcommand -> {
+                            if(it.call(companionObj) is String){
+                                val outmessage = it.call(companionObj).toString()
+                                subject.sendMessage(outmessage)
+                            }
+
+                        }
+                    }
+                }
+            }
+
+
+
+
+        }
+
 
 /*
         //RPG游戏开始与初始角色设定
         //subject.sendMessage("开始进行RPG冒险！用户角色：$senderName")
         //val flag = Datamap.containsKey(sender.id)
-        if (!RPGData.Datamap.containsKey(sender.id)) {
+        if (!RPGData.Datamap.containsKey(senderinput.id)) {
             var Listtemp = mutableListOf<Any>()
             //初始化各个参数并存储在txt里
             var ListMap = mutableListOf<Any>()
@@ -49,35 +87,36 @@ object WithoutConfigurationTest {
                 Listtemp.add("0")
                 TextString = TextString +" 0"
             }
-            RPGData.Datamap.put(sender.id, Listtemp)
-            File(RPGData.UserKeyListPath).appendText(sender.id.toString() +TextString+ "\n")
+            RPGData.Datamap.put(senderinput.id, Listtemp)
+            File(RPGData.UserKeyListPath).appendText(senderinput.id.toString() +TextString+ "\n")
             //subject.sendMessage("@$senderName  可以给出冒险指令了！！")
 
             Listtemp = mutableListOf<Any>()
-            Listtemp= RPGData.Datamap[sender.id] as MutableList<Any>
+            Listtemp= RPGData.Datamap[senderinput.id] as MutableList<Any>
             Listtemp[1]=1//将行动状态设置为1，代表正在进行冒险模式
-            RPGData.Datamap.replace(sender.id, Listtemp)//修改数据库中的数据
+            RPGData.Datamap.replace(senderinput.id, Listtemp)//修改数据库中的数据
 
 
         } else {
             //subject.sendMessage("@$senderName  可以给出冒险指令了！！")
             var Listtemp = mutableListOf<Any>()
-            Listtemp= RPGData.Datamap[sender.id] as MutableList<Any>
+            Listtemp= RPGData.Datamap[senderinput.id] as MutableList<Any>
             Listtemp[1]=1//将行动状态设置为1，代表正在进行冒险模式
-            RPGData.Datamap.replace(sender.id, Listtemp)//修改数据库中的数据
+            RPGData.Datamap.replace(senderinput.id, Listtemp)//修改数据库中的数据
         }
 
 
         var Listtemp = mutableListOf<Any>()
-        Listtemp = RPGData.Datamap[sender.id] as MutableList<Any>
+        Listtemp = RPGData.Datamap[senderinput.id] as MutableList<Any>
         if(Listtemp[1]==0){
-            subject.sendMessage("@$senderName 似乎还没有开始准备冒险活动，不如试试输入 /RPG 吧。")
+            //subject.sendMessage("@$senderName 似乎还没有开始准备冒险活动，不如试试输入 /RPG 吧。")
         }else if(Listtemp[1]==1){
             val random = Random()
-            val time: Int = 25 + random.nextInt(10)  //线性增加时间
+            val time: Int = 0 + random.nextInt(1)  //线性增加时间
             Listtemp[1]=2//将行动状态设置为2，代表正在进行探索，1说明在酒馆，2正在随机探索，3正在随机副本然所，4说明玩家处于团本之中,5代表已经对怪物进行攻击
-            RPGData.Datamap.replace(sender.id, Listtemp)//修改数据库中的数据
-            subject.sendMessage("@$senderName 准备进行冒险探索，预计探索时间为：$time 分钟。如果时间过长，请主动输入 /endexplore 结束此次探索。")
+            RPGData.Datamap.replace(senderinput.id, Listtemp)//修改数据库中的数据
+            //subject.sendMessage("@$senderName 准备进行冒险探索，预计探索时间为：$time 分钟。如果时间过长，请主动输入 /endexplore 结束此次探索。")
+            println(("准备进行冒险探索，预计探索时间为：$time 分钟。如果时间过长，请主动输入 /endexplore 结束此次探索。"))
             val executor = Executors.newScheduledThreadPool(1)//创建一个协程
             executor.schedule(Runnable{
                 runBlocking {
@@ -96,14 +135,14 @@ object WithoutConfigurationTest {
                         }
                         Listtemp[3]=Listtemp[3].toString().toInt()+Coins//金币数量增加1个
                         Listtemp[1]=1
-                        RPGData.Datamap.replace(sender.id, Listtemp)//修改数据库中的数据
-                        subject.sendMessage("@$senderName 冒险探索结束，分别获得了$Coins 个金币与以下$itemNumber 个材料：" +
-                            TextOut)
+                        RPGData.Datamap.replace(senderinput.id, Listtemp)//修改数据库中的数据
+                        //subject.sendMessage("@$senderName 冒险探索结束，分别获得了$Coins 个金币与以下$itemNumber 个材料：" + TextOut)
+                        println(("冒险探索结束，分别获得了$Coins 个金币与以下$itemNumber 个材料：" + TextOut))
                     }
 
                 } } , time.toLong(), TimeUnit.MINUTES)
         }
-*/
+
 
 
 
@@ -144,7 +183,7 @@ object WithoutConfigurationTest {
                     println(it.call(companionObj))
                 }
             }
-        }
+        }*/
 
 
 
@@ -177,7 +216,7 @@ object WithoutConfigurationTest {
 
     }
 
-
-
 }
+
+
 

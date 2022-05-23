@@ -53,13 +53,27 @@ object CommandManager {
     }
     fun CommandExtraction(messagestring: String): MutableList<String> {
         //list将按照空格解析message，倒数第一个存放解析到的指令，倒数第二个保存了原始message
-        var messagelist = messagestring.toUpperCase().trim().split("\\s+".toRegex()) as MutableList<String>
+        println("messagestring:"+messagestring)
+        var messageout = mutableListOf<String>()
+        val messagelist = messagestring.toString().toUpperCase().trim().split("\\s+".toRegex()) as MutableList<String>
+        messagelist.forEach {
+            messageout.add(it.toString())
+        }
+
         var commandString = messagelist[0].replace("\\d".toRegex(), "")
+        println("commandString:"+commandString)
+
         val myregex= "^\\/.*[A-Z]".toRegex()
         val command = myregex.find(commandString)?.value
-        messagelist.add(messagestring)
-        messagelist.add(command.toString())
-        return messagelist
+        println(command)
+
+        if(command==null){
+            messageout.add("null")
+        }else{
+            messageout.add(command.toString())
+        }
+        println(messageout)
+        return messageout
     }
 
 
