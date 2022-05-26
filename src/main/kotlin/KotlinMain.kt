@@ -33,7 +33,7 @@ import java.awt.Image as ImageShaper
 object WithoutConfiguration {
     @JvmStatic
     fun main(args: Array<String>): Unit = runBlocking {
-        val WorkPath = "C:\\BotDATA\\mirai-hello-world\\src\\main\\kotlin\\"
+        val WorkPath = System.getProperty("user.dir")+"\\src\\main\\kotlin\\"
         //定义一个用于存放配置数据的list，包含了bot账号，密码以及root权限的各类数据
         val RootList = mutableListOf<String>()
         val RootPath= WorkPath+"data\\loroot.txt"
@@ -611,6 +611,7 @@ object WithoutConfiguration {
                                                                     g2d.dispose()
                                                                     val os = ByteArrayOutputStream()
                                                                     ImageIO.write(image, "png", os)
+
 
                                                                     //ImageIO.write(image, "png", File(WorkPath+"xsx.png"))
                                                                     subject.sendImage( ByteArrayInputStream(os.toByteArray()) as InputStream)

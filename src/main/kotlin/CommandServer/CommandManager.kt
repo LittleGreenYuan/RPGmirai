@@ -1,5 +1,8 @@
 package org.example.mirai.CommandServer
 
+import net.mamoe.mirai.Bot
+import net.mamoe.mirai.event.events.GroupMessageEvent
+import org.example.mirai.BotServer.UserData.Companion.RootList
 import java.io.File
 import java.util.HashMap
 import kotlin.reflect.full.companionObject
@@ -7,6 +10,18 @@ import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.declaredFunctions
 
 object CommandManager {
+    fun MessageCatcher(bot: Bot){
+        /*
+        bot.getFriend(RootList[2].toLong())?.sendMessage("System online!")//加载bot
+        bot.eventChannel.subscribeAlways<GroupMessageEvent> {
+
+        }*/
+        MessageManager.register(bot)//消息捕捉
+
+
+
+
+    }
     fun autoSetup(packageName: String): MutableList<String> {
         //将定义了插件的包导入成为包名返回
         // 判断传入的文件是不是为空
@@ -53,7 +68,6 @@ object CommandManager {
     }
     fun CommandExtraction(messagestring: String): MutableList<String> {
         //list将按照空格解析message，倒数第一个存放解析到的指令，倒数第二个保存了原始message
-        println("messagestring:"+messagestring)
         var messageout = mutableListOf<String>()
         val messagelist = messagestring.toString().toUpperCase().trim().split("\\s+".toRegex()) as MutableList<String>
         messagelist.forEach {
@@ -61,18 +75,15 @@ object CommandManager {
         }
 
         var commandString = messagelist[0].replace("\\d".toRegex(), "")
-        println("commandString:"+commandString)
 
         val myregex= "^\\/.*[A-Z]".toRegex()
         val command = myregex.find(commandString)?.value
-        println(command)
 
         if(command==null){
             messageout.add("null")
         }else{
             messageout.add(command.toString())
         }
-        println(messageout)
         return messageout
     }
 

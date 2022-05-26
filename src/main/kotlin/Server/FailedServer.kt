@@ -12,8 +12,9 @@ class FailedServer {
         fun getCommandName(): String {
             return "/0216null"
         }
-        fun ServerMain() {
-           return
+        fun ServerMain(): String {
+            val outputServer = "FFFF"
+            return outputServer
         }
 
     }

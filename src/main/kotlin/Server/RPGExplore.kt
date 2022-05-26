@@ -13,8 +13,8 @@ class RPGExplore {
 
 
 
-
-            return ""
+            val outputServer = "dd"
+            return outputServer
         }
 
     }

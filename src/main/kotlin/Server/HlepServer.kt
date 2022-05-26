@@ -1,7 +1,11 @@
 package org.example.mirai.Server
 
+import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import org.example.mirai.BotServer.UserData
 import org.example.mirai.BotServer.UserUtil
+import java.io.File
+
+
 
 class HlepServer {
     companion object MyObject {
@@ -12,16 +16,17 @@ class HlepServer {
         fun getCommandName(): String {
             return "/help"
         }
-        fun ServerMain(): String {
-            val (message,sender,senderName)= UserUtil.readData()
+        fun ServerMain(): Int {
+            val (message,sender, senderName)= UserUtil.readData()
             if(sender.id == UserData.RootList[2].toLong()){
-                return "AAAAA"
+                val Mapimg = File(System.getProperty("user.dir")+"\\src\\main\\kotlin\\data\\IMG01AT.png")
+                UserUtil.readData.uploadfileImage(Mapimg.toExternalResource())
+                val outputServer = "AAAAA"
+                return 1
             }else{
-                return "BBBB"
+                val outputServer = "BBBBB"
+                return 1
             }
-
-
-
         }
 
     }

@@ -1,16 +1,26 @@
 package org.example.mirai
 
+import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
+import net.mamoe.mirai.Bot
+import net.mamoe.mirai.BotFactory
+import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.contact.getMember
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.message.data.sendTo
+import net.mamoe.mirai.utils.BotConfiguration
 import net.mamoe.mirai.utils.BotConfiguration.MiraiProtocol.*
+import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import org.example.mirai.BotServer.UserData
 import org.example.mirai.BotServer.UserUtil
+import org.example.mirai.BotServer.YuanBot
+import org.example.mirai.BotServer.YuanMind.bot
 import org.example.mirai.CommandServer.CommandManager
 import org.example.mirai.CommandServer.CommandManager.CommandExtraction
 import org.example.mirai.DataServer.RPGData
+import java.awt.image.BufferedImage
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.*
 import java.util.regex.Pattern
@@ -27,49 +37,23 @@ import java.awt.Image as ImageShaper
 
 
 object WithoutConfigurationTest {
-
     @JvmStatic
     fun main(args: Array<String>): Unit = runBlocking {
 
-
-        val bot = UserData.Botload()//回传生成的的bot，同时内置了上传本地玩家数据的RPGData.RPGUserDataUpload()部分
+        //val output = UserData.Botload()//回传生成的的bot，同时内置了上传本地玩家数据的RPGData.RPGUserDataUpload()部分
         //RPGData.RPGUserDataUpload()//上传本地RPG的相关数据，同时设定自动保存的协程
-
-        val serverName = CommandManager.autoSetup(System.getProperty("user.dir")+"\\src\\main\\kotlin\\Server")//将定义了插件的包导入成为包名返回
-        val serverMap = CommandManager.autoSetupCommand(serverName)//将所有插件的调用指令与serverName建立map映射
-
-        bot.eventChannel.subscribeAlways<GroupMessageEvent> {
-            val Command = CommandExtraction(message.contentToString())
-            if(Command[Command.size-1] == "null"){
-
-            }else{
-                UserUtil.readData.getBotdata(message, sender, senderName)
-                var kclasstname = serverMap.get(Command[Command.size-1])?.let { serverName.get(it.toInt()) }//安全地访问每个指令对应的包，如果没有注册该指令则返回null
-                if(kclasstname == null){
-                    kclasstname="org.example.mirai.Server.FailedServer"
-                }
-                val inputcommand="ServerMain"//解析具体执行什么指令
-                val personClass = Class.forName(kclasstname.toString()).kotlin
-                //val obj = personClass.createInstance()
-                val companionObj = personClass.companionObjectInstance
-                // 访问companion object的函数
-                personClass.companionObject?.declaredFunctions?.forEach {
-                    when (it.name) {
-                        inputcommand -> {
-                            if(it.call(companionObj) is String){
-                                val outmessage = it.call(companionObj).toString()
-                                subject.sendMessage(outmessage)
-                            }
-
-                        }
-                    }
-                }
-            }
+        //println(filex::class.qualifiedName.toString())
 
 
+/*
+        runBlocking {
+            bot.login()
+            bot.jion()
+        }*/
+        bot.login()
+        bot.jion()
 
 
-        }
 
 
 /*
@@ -217,6 +201,5 @@ object WithoutConfigurationTest {
     }
 
 }
-
 
 
