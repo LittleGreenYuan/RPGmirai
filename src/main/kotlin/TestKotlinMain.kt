@@ -12,16 +12,16 @@ import net.mamoe.mirai.message.data.sendTo
 import net.mamoe.mirai.utils.BotConfiguration
 import net.mamoe.mirai.utils.BotConfiguration.MiraiProtocol.*
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
-import org.example.mirai.BotServer.UserData
-import org.example.mirai.BotServer.UserUtil
-import org.example.mirai.BotServer.YuanBot
+import org.example.mirai.BotServer.*
 import org.example.mirai.BotServer.YuanMind.bot
 import org.example.mirai.CommandServer.CommandManager
 import org.example.mirai.CommandServer.CommandManager.CommandExtraction
 import org.example.mirai.DataServer.RPGData
+import org.example.mirai.Server.Commandparising
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.lang.reflect.Modifier
 import java.util.*
 import java.util.regex.Pattern
 import javax.imageio.ImageIO
@@ -31,7 +31,10 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.KFunction
 import kotlin.reflect.full.*
+import kotlin.reflect.jvm.javaMethod
+import kotlin.reflect.jvm.kotlinFunction
 import java.awt.Image as ImageShaper
 
 
@@ -52,6 +55,20 @@ object WithoutConfigurationTest {
         }*/
         bot.login()
         bot.jion()
+
+        //val kFunction = getFunctionFromFile(System.getProperty("user.dir")+"\\src\\main\\kotlin\\Server\\HlepServer", "ServerMain")
+        //kFunction?.call()
+
+
+
+        /*
+        val fullClassName = "org.example.mirai.Server.commandparise"
+        val cls = Class.forName(fullClassName)
+        val kotlinClass = cls.kotlin
+        val c = cls.getMethod("ClassC").invoke(kotlinClass.objectInstance)
+        println(c)*/
+
+
 
 
 
@@ -197,6 +214,19 @@ object WithoutConfigurationTest {
 
 
 
+
+    }
+    fun getFunctionFromFile(fileName: String, funcName: String): KFunction<*>? {
+
+        val selfRef = ::getFunctionFromFile
+
+        val currentClass = selfRef.javaMethod!!.declaringClass
+
+        val classDefiningFunctions = currentClass.classLoader.loadClass("${fileName}.kt")
+
+        val javaMethod = classDefiningFunctions.methods.find { it.name == funcName && Modifier.isStatic(it.modifiers)}
+
+        return javaMethod?.kotlinFunction
 
     }
 

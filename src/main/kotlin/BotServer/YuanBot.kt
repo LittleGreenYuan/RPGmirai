@@ -30,7 +30,9 @@ class YuanBot {
     }
     suspend fun jion(){
         bot.join()
-
+    }
+    suspend fun proactiveresponse(groupnumber:Long, message:String){
+        bot.getGroup(groupnumber)?.sendMessage(message)
     }
 
 

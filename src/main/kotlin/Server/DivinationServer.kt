@@ -1,5 +1,6 @@
 package org.example.mirai.Server
 
+import org.example.mirai.BotServer.UserUtil
 import org.example.mirai.WithoutConfiguration
 
 class DivinationServer {
@@ -60,12 +61,13 @@ class DivinationServer {
         fun getCommandName(): String {
             return "/sg"
         }
-        suspend fun ServerMain(): String {
+        fun ServerMain(){
             val DivinationServer=DivinationServer()
             var Arraylist=Array(6){IntArray(3)}
             var (bengua,biangua,IndexNumber)= DivinationServer.BenGua(Arraylist)
             val serveroutput ="->本卦："+DivinationServer.NameofGua[IndexNumber[0]]+" "+DivinationServer.XiangofGua[IndexNumber[0]]+"\n"+bengua+DivinationServer.JieofGua[IndexNumber[0]]+"\n\n->变卦："+DivinationServer.NameofGua[IndexNumber[1]]+" "+DivinationServer.XiangofGua[IndexNumber[1]]+"\n"+biangua+DivinationServer.JieofGua[IndexNumber[1]]+"\nTips:本卦是对现在某件事的描述，变卦是对这件事结果的描述"
-            return serveroutput
+            UserUtil.readData.uploadmessage(serveroutput)
+
         }
 
 

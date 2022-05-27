@@ -2,6 +2,7 @@ package org.example.mirai.CommandServer
 
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 import org.example.mirai.BotServer.UserData.Companion.RootList
 import java.io.File
 import java.util.HashMap
@@ -17,8 +18,9 @@ object CommandManager {
 
         }*/
         MessageManager.register(bot)//消息捕捉
-
-
+    }
+    suspend fun MessageOutput(event:MessageEvent){
+        MessageManager.proactiveresponse(event)
 
 
     }
@@ -58,8 +60,9 @@ object CommandManager {
             personClass.companionObject?.declaredFunctions?.forEach {
                 when (it.name) {
                     "getCommandName" -> {
-                        println("已经从${setupCommandName}注册指令：->"+it.call(companionObj).toString())//打印注册的指令名称
-                        kcalssMap.put(it.call(companionObj).toString().toUpperCase(),i)
+                        val commandname= it.call(companionObj).toString()
+                        println("已经从${setupCommandName}注册指令：->"+commandname)//打印注册的指令名称
+                        kcalssMap.put(commandname.toUpperCase(),i)
                     }
                 }
             }

@@ -3,6 +3,8 @@ package org.example.mirai.BotServer
 
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Member
+import net.mamoe.mirai.event.Event
+import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.Message
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.utils.ExternalResource
@@ -13,6 +15,7 @@ class UserUtil {
     //用于将数据传递给其他类的类（主要是不知道含参调用怎么处理）
     object readData {
         var tempdata=-1
+        lateinit var  inputevent: MessageEvent
         lateinit var inputmessage:MessageChain
         lateinit var inputsender:Member
         lateinit var inputsenderName:String
@@ -25,7 +28,8 @@ class UserUtil {
 
 
 
-        fun getBotdata(message: MessageChain,sender: Member,senderName: String) {
+        fun getBotdata(event: MessageEvent,message: MessageChain,sender: Member,senderName: String) {
+            inputevent = event
             inputmessage = message
             inputsender = sender
             inputsenderName = senderName
@@ -73,8 +77,8 @@ class UserUtil {
             outputtype="End"
         }
 
-        operator fun invoke(): Triple<MessageChain, Member, String> {
-            return Triple(inputmessage,inputsender,inputsenderName)
+        operator fun invoke(): Triple<Pair<MessageEvent, MessageChain>, Member, String> {
+            return Triple(Pair(inputevent,inputmessage),inputsender,inputsenderName)
         }
 
     }

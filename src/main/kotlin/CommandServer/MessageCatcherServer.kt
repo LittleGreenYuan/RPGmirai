@@ -1,10 +1,13 @@
 package org.example.mirai.CommandServer
 
 import net.mamoe.mirai.Bot
+import net.mamoe.mirai.contact.Contact.Companion.sendImage
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import org.example.mirai.BotServer.UserUtil
+import org.example.mirai.BotServer.YuanBot
 import org.example.mirai.BotServer.YuanMind
 import org.example.mirai.CommandServer.CommandManager.CommandExtraction
 import java.io.File
@@ -22,6 +25,7 @@ object MessageManager {
 
             }else{
                 var kclasstname = YuanMind.serverMap.get(Command[Command.size-1])?.let { YuanMind.serverName.get(it.toInt()) }//安全地访问每个指令对应的包，如果没有注册该指令则返回null
+                println("*************"+kclasstname)
                 if(kclasstname == null){
                     kclasstname="org.example.mirai.Server.FailedServer"
                 }
@@ -33,7 +37,8 @@ object MessageManager {
                 personClass.companionObject?.declaredFunctions?.forEach {
                     when (it.name) {
                         inputcommand -> {
-                            UserUtil.readData.getBotdata(message, sender, senderName)
+                            println("*************+++++++++")
+                            UserUtil.readData.getBotdata(this,message, sender, senderName)
                             it.call(companionObj)
 
                             when(UserUtil.readData.getoutputtype())
@@ -56,12 +61,13 @@ object MessageManager {
                                     subject.sendMessage(UserUtil.readData.getoutputmessagemessage())
                                     UserUtil.readData.endoutputtype()
                                 }
+                                "InputStream"->{
+                                    subject.sendImage(UserUtil.readData.getoutputstream())
+                                    UserUtil.readData.endoutputtype()
+                                }
                                 else -> {}
 
                             }
-
-
-                            //
 
                         }
                     }
@@ -71,4 +77,10 @@ object MessageManager {
 
             }
         }
+
+    suspend fun proactiveresponse(event:MessageEvent) {
+        event.subject.sendMessage("xxxxxxxxxxxxxxx")
+
     }
+
+}
