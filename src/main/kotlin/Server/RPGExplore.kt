@@ -68,7 +68,7 @@ class RPGExplore {
                 println("@$senderName 似乎还没有开始准备冒险活动，不如试试输入 /RPG 吧。")
             }else if(Listtemp[1]==1){
                 val random = Random()
-                val time: Int = 1 + random.nextInt(1)  //线性增加时间
+                val time: Int = 20 + random.nextInt(15)  //线性增加时间
                 Listtemp[1]=2//将行动状态设置为2，代表正在进行探索，1说明在酒馆，2正在随机探索，3正在随机副本然所，4说明玩家处于团本之中,5代表已经对怪物进行攻击
                 Datamap.replace(sender.id, Listtemp)//修改数据库中的数据
 

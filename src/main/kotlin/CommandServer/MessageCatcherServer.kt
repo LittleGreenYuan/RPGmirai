@@ -25,7 +25,6 @@ object MessageManager {
 
             }else{
                 var kclasstname = YuanMind.serverMap.get(Command[Command.size-1])?.let { YuanMind.serverName.get(it.toInt()) }//安全地访问每个指令对应的包，如果没有注册该指令则返回null
-                println("*************"+kclasstname)
                 if(kclasstname == null){
                     kclasstname="org.example.mirai.Server.FailedServer"
                 }
@@ -37,7 +36,6 @@ object MessageManager {
                 personClass.companionObject?.declaredFunctions?.forEach {
                     when (it.name) {
                         inputcommand -> {
-                            println("*************+++++++++")
                             UserUtil.readData.getBotdata(this,message, sender, senderName)
                             it.call(companionObj)
 
